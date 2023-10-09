@@ -43,3 +43,24 @@ feedbackForm.addEventListener('submit', (event) => {
     messageTextarea.value = '';
 });
 
+const playerTimeKey = 'player-time';
+const player = document.querySelector('.player');
+const playerInterval = 1000;
+
+function savePlayerTime() {
+    const currentTime = player.currentTime;
+    localStorage.setItem(playerTimeKey, currentTime);
+}
+
+const savePlayerTimeThrottled = throttle(savePlayerTime, playerInterval);
+
+player.addEventListener('timeupdate', savePlayerTimeThrottled);
+
+const savedPlayerTime = localStorage.getItem(playerTimeKey);
+
+if (savedPlayerTime) {
+
+    player.currentTime = savedPlayerTime;
+}
+
+
