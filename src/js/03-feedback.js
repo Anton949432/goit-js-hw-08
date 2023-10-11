@@ -1,22 +1,8 @@
-import throttle from 'lodash.throttle';
-import Vimeo from '@vimeo/player';
+import throttle from 'lodash/throttle';
 
 const feedbackForm = document.querySelector('.feedback-form');
 const emailInput = feedbackForm.querySelector('input[name="email"]');
 const messageTextarea = feedbackForm.querySelector('textarea[name="message"]');
-
-const iframe = document.querySelector('iframe');
-const player = new Vimeo(iframe);
-
-player.on('timeupdate', function (data) {
-    const currentTime = data.seconds;
-    localStorage.setItem('videoplayer-current-time', currentTime);
-});
-
-const savedTime = parseFloat(localStorage.getItem('videoplayer-current-time'));
-if (!isNaN(savedTime)) {
-    player.setCurrentTime(savedTime);
-}
 
 const saveFormState = () => {
     const formState = {
@@ -45,20 +31,23 @@ loadFormState();
 feedbackForm.addEventListener('submit', (event) => {
     event.preventDefault();
 
-    const email = emailInput.value.trim();
-    const message = messageTextarea.value.trim();
+    const email = emailInput.value;
+    const message = messageTextarea.value;
 
-    if (!email || !message) {
-        alert('Please fill in both fields: Email and Message');
+    if (!email.trim() || !message.trim()) {
+        alert('Both email and message fields must be filled out.');
         return;
     }
 
+    const formData = {
+        email: email,
+        message: message,
+    };
+
     console.log('Form submitted with data:');
-    console.log('Email:', email);
-    console.log('Message:', message);
+    console.log(formData);
 
     localStorage.removeItem('feedback-form-state');
     emailInput.value = '';
     messageTextarea.value = '';
 });
-
